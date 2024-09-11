@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock title %}
+
+{% block content %}
+
+<form method="GET" action="{% url 'book_list' %}" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="queryInput" class="form-label">Search by Title or Description</label>
+            <input type="text" name="query" class="form-control" id="queryInput" value="{{ request.GET.query }}">
+        </div>
+
+        <div class="col-md-4">
+            <label for="authorSelect" class="form-label">Filter by Author</label>
+            <select name="author_id" class="form-select" id="authorSelect">
+                <option value="">All Authors</option>
+                {% for author in authors %}
+                    <option value="{{ author.id }}" {% if request.GET.author_id == author.id|stringformat:"s" %}selected{% endif %}>
+                        {{ author.name }} {{ author.surname }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% if request.user.role == 1 %}
+            <div class="mb-3">
+                <label for="userSelect" class="form-label">Select User</label>
+                <select name="user_id" class="form-select" id="userSelect">
+                    <option value="">All Users</option>
+                    {% for user in ordinary_users %}
+                        <option value="{{ user.id }}" {% if request.GET.user_id == user.id|stringformat:"s" %}selected{% endif %}>
+                            {{ user.first_name }} ({{ user.last_name }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
+
+<br/>
+{% comment %} <h3>There are {{ books|length }} books available.</h3> {% endcomment %}
+
+{% if books %}
+    {% for book in books %}
+        <a href="{% url 'book_list' book.id %}" class="unstyled">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">Id: {{ book.id }}</p>
+                    <h5 class="card-title">Name: {{ book.name }}</h5>
+                    <p class="card-text">Description: {{ book.description }}</p>
+                    {% comment %} <p class="card-text">Count: {{ book.count }}</p>
+                    <p class="card-text">
+                        Authors:
+                        {% for author in book.authors.all %}
+                            {{ author.name }} {{ author.surname }} {{ author.patronymic }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p> {% endcomment %}
+                </div>
+                {% if user.role == 1 %}
+                    <div class="d-flex justify-content-end align-items-center p-3">
+                        <a href="{% url 'book_update' book.id %}">
+                            <span class="btn btn-outline-primary">Edit</span>
+                        </a>
+                        </br>
+                        <a href="{% url 'book_delete' book.id %}">
+                            <span class="btn btn-outline-danger">Delete</span>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+{% else %}
+    <p>There are no books available.</p>
+{% endif %}
+
+{% if user.role == 1 %}
+    <form class="d-flex" action="{% url "book_create" %}">
+        <button class="btn btn-outline-success" type="submit">Create book</button>
+    </form>
+{% endif %}
+
+{% endblock content %}

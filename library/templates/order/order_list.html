@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock title %}
+
+{% block content %}
+
+{% if orders %}
+    {% if user.role == 1 %}
+        <h2>All orders.</h2>
+    {% else %}
+        <h2>Your orders.</h2>
+    {% endif %}
+
+    <h2>There are {{ orders|length }} orders available.</h2>
+
+    {% for order in orders %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <p class="card-text">Id: {{ order.id }}</p>
+                <h5 class="card-title">User: {{ order.user }}</h5>
+                <p class="card-text">Book: {{ order.book }}</p>
+                <p class="card-text">Created at: {{ order.created_at }}</p>
+                <p class="card-text">Plated end at: {{ order.plated_end_at }}</p>
+            </div>
+            {% if user.role == 1 %}
+                <div class="d-flex justify-content-end align-items-center p-3">
+                    <a href="{% url 'order_close' order.id %}">
+                        <span class="btn btn-outline-danger">Close</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+{% else %}
+    <p>There are no orders.</p>
+{% endif %}
+
+<form class="d-flex" action="{% url "order_create" %}">
+    <button class="btn btn-outline-success" type="submit">Create order</button>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Authors{% endblock title %}
+
+{% block content %}
+
+{% if authors %}
+    {% for author in authors %}
+        <a href="{% url 'author_detail' author.id %}" class="unstyled">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Name: {{ author.name }}</h5>
+                    <p class="card-text">Surname: {{ author.surname }}</p>
+                    {% if user.role == 1 %}
+                        <div class="d-flex justify-content-end align-items-center p-3">
+                            <a href="{% url 'author_update' author.id %}">
+                                <span class="btn btn-outline-primary">Edit</span>
+                            </a>
+                            </br>
+                            {% if not author.books.all%}
+
+                                <a href="{% url 'author_delete' author.id %}">
+                                    <span class="btn btn-outline-danger">Delete</span>
+                                </a>
+
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+{% else %}
+    <p>There are no authors.</p>
+{% endif %}
+
+{% if user.role == 1 %}
+    <form class="d-flex" action="{% url "author_create" %}">
+        <button class="btn btn-outline-success" type="submit">Create author</button>
+    </form>
+{% endif %}
+
+{% endblock content %}

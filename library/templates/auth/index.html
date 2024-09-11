@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Main Page{% endblock title %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+<h1>Welcome to the Library Management System</h1>
+
+{% if user.is_authenticated %}
+    <p>Hello, {{ user.first_name }}! You are logged in as {{ user.get_role_name }}.</p>
+    <div class="mt-4">
+        <h2>Quick Links</h2>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{% url 'book_list' %}" class="link-primary">View Books</a>
+            </li>
+            {% if user.role == 1 %}
+                <li class="list-group-item">
+                    <a href="{% url 'author_list' %}" class="link-primary">Manage Authors</a>
+                </li>
+            {% endif %}
+            <li class="list-group-item">
+                <a href="{% url 'order_list' %}" class="link-primary">My Orders</a>
+            </li>
+            {% if user.is_authenticated and user.role == 1 %}
+                <li class="list-group-item">
+                    <a href="{% url 'user_list' %}" class="link-primary">Manage Users</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% else %}
+    <div class="guest-info">
+        <p>Welcome to the Library Management System! Here you can manage books, orders, authors, and much more.</p>
+        <p>If you are already registered, please <a href="{% url 'user_login' %}" class="link-primary">log in</a> to access your account.</p>
+        <p>New to the system? <a href="{% url 'user_register' %}" class="link-primary">Create an account</a> and start exploring our library.</p>
+    </div>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ book.name }}({{ book.id }}){% endblock title %}
+
+{% block content %}
+
+    {% if book %}
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ book.name }}</h2>
+                </div>
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5 class="card-title">Static Information</h5>
+                            <p class="card-text"><strong>Title:</strong> {{ book.name }}</p>
+                            <p class="card-text"><strong>Author(s):</strong> {{ book.authors.all|join:", " }}</p>
+                            <p class="card-text"><strong>Year of Publication:</strong> {{ book.year_of_publication }}</p>
+                        </div>
+                    </div>
+        
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5 class="card-title">Dynamic Information</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ book.description }}</p>
+                            <p class="card-text"><strong>Date of Issue:</strong> {{ book.date_of_issue }}</p>
+                            <p class="card-text"><strong>Copies Available:</strong> {{ book.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>This book is not available.</p>
+    {% endif %}
+
+{% endblock content %}

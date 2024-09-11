@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Account{% endblock title %}
+
+{% block content %}
+    <div class="container mt-4">
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Account Information -->
+        <div class="row mb-4">
+            <div class="col-md-5">
+                <h2>Account Information</h2>
+                {% if user.role == 1 %}
+                    <p>It's your account! You are an admin.</p>
+                {% else %}
+                    <p>It's your account! You are a user.</p>
+                {% endif %}
+                
+                <form class="d-flex mb-3" action="{% url 'user_logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger w-100" type="submit">Log out</button>
+                </form>
+                
+                <form class="d-flex mb-3" action="{% url 'user_delete' user.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger w-100" type="submit">Delete Account</button>
+                </form>
+            </div>
+            
+            <!-- Edit Profile Form -->
+            <div class="col-md-6 offset-md-1">
+                <div class="form-container p-4 bg-light rounded shadow">
+                    <h4 class="text-center mb-4">Edit Profile</h4>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="middle_name" class="form-label">Middle Name</label>
+                            {{ form.middle_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            {{ form.role }}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

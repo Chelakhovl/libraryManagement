@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Author {{ author.name }}({{ author.id }}){% endblock title %}
+
+{% block content %}
+
+    {% if author %}
+        <h2>Author {{ author.name }} {{ author.surname }}</h2>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Name: {{ author.name }}</h5>
+                <p class="card-text">Surname: {{ author.surname }}</p>
+                <p class="card-text">Patronymic: {{ author.patronymic }}</p>
+                <p class="card-text">
+                    Books:
+                    {% if author.books.all %}
+                        {% for book in author.books.all %}
+                            {{ book.id }} {{ book.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    {% else %}
+        <p>This author is not available.</p>
+    {% endif %}
+
+{% endblock content %}

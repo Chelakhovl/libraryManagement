@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Users{% endblock title %}
+
+{% block content %}
+
+{% if users %}
+    {% for user in users %}
+        <a href="{% url 'user_list' user.id %}" class="unstyled">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">Id: {{ user.id }}</p>
+                    <h5 class="card-title">First name: {{ user.first_name }}</h5>
+                    <p class="card-text">Last name: {{ user.last_name }}</p>
+                    <p class="card-text">Email: {{ user.email }}</p>
+                </div>
+                {% if request.user.is_staff or request.user.is_superuser %}
+                    <div class="d-flex justify-content-end align-items-center p-3">
+                        <a href="{% url 'user_delete' user.id %}">
+                            <span class="btn btn-outline-danger">Delete</span>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+{% else %}
+    <p>There are no users.</p>
+{% endif %}
+
+{% endblock content %}

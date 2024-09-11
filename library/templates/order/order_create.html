@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Create Order{% endblock title %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'order_create' %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% if user.role == 1 %}
+        <div class="mb-3">
+            <label for="userSelect" class="form-label">{{ form.user.label }}</label>
+            <div id="userSelect">
+                {% if form.user %}
+                    <select class="form-select" id="userSelect" name="{{ form.user.name }}" required>
+                        {% for choice in form.user.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == form.user.value %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <p class="text-muted">No users available.</p>
+                {% endif %}
+            </div>
+            {% for error in form.user.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="mb-3">
+        <label for="bookSelect" class="form-label">{{ form.book.label }}</label>
+        <div id="bookSelect">
+            {% if form.book %}
+                <select class="form-select" id="bookSelect" name="{{ form.book.name }}" required>
+                    {% for choice in form.book.field.choices %}
+                        <option value="{{ choice.0 }}" {% if choice.0 == form.book.value %}selected{% endif %}>
+                            {{ choice.1 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <p class="text-muted">No books available.</p>
+            {% endif %}
+        </div>
+        {% for error in form.book.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Create Order</button>
+</form>
+
+{% endblock content %}
+
+
